@@ -3,10 +3,14 @@ package com.tigo.ahp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import com.tigo.ahp.dtos.SignupRequest;
 import com.tigo.ahp.dtos.UserDTO;
 import com.tigo.ahp.models.User;
 import com.tigo.ahp.repositories.UserRepository;
+
+import jakarta.validation.Valid;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -15,7 +19,7 @@ public class AuthServiceImpl implements AuthService {
   private UserRepository userRepository;
 
   @Override
-  public UserDTO createdUser(SignupRequest signupRequest) {
+  public UserDTO createdUser(@Valid @RequestBody SignupRequest signupRequest) {
     User user = new User();
     user.setEmail(signupRequest.getEmail());
     user.setAdress(signupRequest.getAdress());
