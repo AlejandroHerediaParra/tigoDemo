@@ -18,7 +18,10 @@ public class AhpApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("*").allowedOrigins("*");
+				registry.addMapping("/**") 
+                .allowedOrigins("http://localhost:3000") // Replace with your frontend's origin
+                .allowedMethods("GET", "POST", "PUT", "DELETE") 
+                .allowedHeaders("Authorization", "Content-Type"); 
 			}
 		};
 	}

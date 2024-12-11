@@ -52,10 +52,8 @@ public class AuthServiceImpl implements AuthService {
   }
 
   public String generateJwtForUser(String email) {
-      // Load UserDetails (similar to AuthenticationController)
       UserDetails userDetails = userDetailService.loadUserByUsername(email);
 
-      // Generate JWT using JwtUtil
       String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
       return jwt;
@@ -63,10 +61,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
     public UserDTO getUserByEmail(String email) {
-        // Implement logic to retrieve UserDTO based on email 
-        // (e.g., using a repository or database access)
 
-        // Example (assuming you have a UserRepository)
         User user = userRepository.findFirstByEmail(email); 
         if (user != null) {
             return mapToUserDTO(user); 
@@ -75,7 +70,6 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    // Helper method to map User entity to UserDTO
     private UserDTO mapToUserDTO(User user) {
       UserDTO userDTO = new UserDTO();
       userDTO.setEmail(user.getEmail());

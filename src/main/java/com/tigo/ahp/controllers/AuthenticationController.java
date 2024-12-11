@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tigo.ahp.dtos.AuthenticationRequest;
-import com.tigo.ahp.dtos.AuthenticationResponse;
 import com.tigo.ahp.dtos.UserDTO;
 import com.tigo.ahp.dtos.UserWithJwtDTO;
 import com.tigo.ahp.services.AuthService;
