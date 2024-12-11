@@ -1,6 +1,9 @@
 package com.tigo.ahp.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,6 +12,8 @@ import com.tigo.ahp.dtos.SignupRequest;
 import com.tigo.ahp.dtos.UserDTO;
 import com.tigo.ahp.models.User;
 import com.tigo.ahp.repositories.UserRepository;
+import com.tigo.ahp.services.jwt.UserDetailServiceImpl;
+import com.tigo.ahp.utils.JwtUtil;
 
 import jakarta.validation.Valid;
 
@@ -17,6 +22,12 @@ public class AuthServiceImpl implements AuthService {
   
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private UserDetailServiceImpl userDetailService;
+
+  @Autowired
+  private JwtUtil jwtUtil;
 
   @Override
   public UserDTO createdUser(@Valid @RequestBody SignupRequest signupRequest) {
@@ -40,4 +51,40 @@ public class AuthServiceImpl implements AuthService {
     return userDTO;
   }
 
+  public String generateJwtForUser(String email) {
+      // Load UserDetails (similar to AuthenticationController)
+      UserDetails userDetails = userDetailService.loadUserByUsername(email);
+
+      // Generate JWT using JwtUtil
+      String jwt = jwtUtil.generateToken(userDetails.getUsername());
+
+      return jwt;
+  }
+
+  @Override
+    public UserDTO getUserByEmail(String email) {
+        // Implement logic to retrieve UserDTO based on email 
+        // (e.g., using a repository or database access)
+
+        // Example (assuming you have a UserRepository)
+        User user = userRepository.findFirstByEmail(email); 
+        if (user != null) {
+            return mapToUserDTO(user); 
+        } else {
+            return null; 
+        }
+    }
+
+    // Helper method to map User entity to UserDTO
+    private UserDTO mapToUserDTO(User user) {
+      UserDTO userDTO = new UserDTO();
+      userDTO.setEmail(user.getEmail());
+      userDTO.setAdress(user.getAdress());
+      userDTO.setBirthDate(user.getBirthDate());
+      userDTO.setLastName(user.getLastName());
+      userDTO.setName(user.getName());
+      userDTO.setPassword(user.getPassword());
+      userDTO.setId(user.getId());
+      return userDTO;
+    }
 }

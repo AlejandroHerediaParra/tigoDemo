@@ -3,6 +3,7 @@ package com.tigo.ahp.controllers;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -15,12 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tigo.ahp.dtos.AuthenticationRequest;
 import com.tigo.ahp.dtos.AuthenticationResponse;
+import com.tigo.ahp.dtos.UserDTO;
+import com.tigo.ahp.dtos.UserWithJwtDTO;
+import com.tigo.ahp.services.AuthService;
 import com.tigo.ahp.services.jwt.UserDetailServiceImpl;
 import com.tigo.ahp.utils.JwtUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -36,8 +41,12 @@ public class AuthenticationController {
   @Autowired
   private JwtUtil jwtUtil;
 
+  @Autowired
+  private AuthService authService;
+
+  @CrossOrigin(origins = "*")
   @PostMapping("/authentication")
-  public AuthenticationResponse createAuthenticationToken(@Valid @RequestBody  AuthenticationRequest authenticationRequest, HttpServletResponse response) throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
+  public ResponseEntity createAuthenticationToken(@Valid @RequestBody  AuthenticationRequest authenticationRequest, HttpServletResponse response) throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
     } catch (BadCredentialsException e) {
@@ -48,6 +57,8 @@ public class AuthenticationController {
     }
     final UserDetails userDetails = userDetailService.loadUserByUsername(authenticationRequest.getEmail());
     final String jwt = jwtUtil.generateToken(userDetails.getUsername());
-    return new AuthenticationResponse(jwt);
+    UserDTO user = authService.getUserByEmail(authenticationRequest.getEmail()); 
+
+    return ResponseEntity.ok(new UserWithJwtDTO(user, jwt));
   }
 }

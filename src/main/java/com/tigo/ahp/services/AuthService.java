@@ -7,5 +7,7 @@ public interface AuthService {
 
   UserDTO createdUser(SignupRequest signupRequest);
 
-  
+  String generateJwtForUser(String email);
+ 
+  UserDTO getUserByEmail(String email); 
 }
