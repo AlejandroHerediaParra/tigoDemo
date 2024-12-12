@@ -57,4 +57,14 @@ public class UserServiceImpl implements UserService {
       userDTO.setId(user.getId());
       return userDTO;
     }
+
+    @Override
+    public User getUserByEmail(String userEmail) {
+      User user = userRepository.findFirstByEmail(userEmail);
+      if (user != null) {
+        return user;
+      } else {
+        throw new RuntimeException("User not found"); 
+      }
+    }
 }

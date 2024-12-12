@@ -26,9 +26,9 @@ public class WebSecurityConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
     return httpSecurity.csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/register", "/authentication", "/users/**").permitAll()
+            .requestMatchers("/register", "/authentication", "/users/**", "/products").permitAll()
             .and()
-            .authorizeHttpRequests().requestMatchers("/api/**")
+            .authorizeHttpRequests().requestMatchers("/**/**")
             .authenticated().and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

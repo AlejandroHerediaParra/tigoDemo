@@ -50,10 +50,7 @@ public class UserController {
         }
     }
 
-    // Helper method to extract user ID from JWT 
     private String extractUserIdFromJwt(String jwt) {
-        // ... (Implement logic to extract user ID from JWT claims)
-        // ... (Example using JWT library)
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey("5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437") // Replace with your actual secret key
                 .build()
