@@ -18,7 +18,13 @@ public class ProductServiceImpl implements ProductService {
       return productRepository.findAll();
   }
 
+  @Override
   public List<Product> searchProductsByTitle(String title) {
     return productRepository.findByTitleContainingIgnoreCase(title); 
   }
+
+  @Override
+  public Product getProductById(Long id) {
+    return productRepository.findById(id).get();
+  };
 }

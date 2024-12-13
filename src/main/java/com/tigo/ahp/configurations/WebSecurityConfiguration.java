@@ -31,10 +31,11 @@ public class WebSecurityConfiguration {
               "/authentication",
               "/users/**",
               "/products",
-              "/products/search"
+              "/products/search",
+              "/users/cart/items"
             ).permitAll()
             .and()
-            .authorizeHttpRequests().requestMatchers("/**/**")
+            .authorizeHttpRequests().requestMatchers("/**/**/**")
             .authenticated().and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
