@@ -10,4 +10,6 @@ public interface CartService {
   public Cart createCart(Cart cart);
   public Cart getCartByUser(User user);
   public List<CartItem> addCartItems(List<CartItem> cartItems);
+  public List<CartItem> getCartItemsByUser(User user); 
+  public void deleteCartItem(Long cartItemId);
 }

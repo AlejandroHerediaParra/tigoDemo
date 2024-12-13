@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +56,7 @@ public class CartController {
         String jwt = request.getHeader("Authorization").replace("Bearer ", ""); 
         String userEmail = jwtUtil.extractUsername(jwt); 
 
-        userService.getUserByEmail(userEmail);
+        User user = userService.getUserByEmail(userEmail);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -91,4 +94,51 @@ public class CartController {
       } 
     }
     
+    @CrossOrigin(origins = "*")
+    @GetMapping("/users/cart/items")
+    public ResponseEntity<Object> getCartItems(HttpServletRequest request) {
+      try {
+        String jwt = request.getHeader("Authorization").replace("Bearer ", "");
+        String userEmail = jwtUtil.extractUsername(jwt);
+
+        User user = userService.getUserByEmail(userEmail);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        List<CartItem> cartItems = cartService.getCartItemsByUser(user);
+        if (cartItems == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); 
+        }
+
+        List<CartItemDTO> cartItemDTOs = cartItems.stream()
+                .map(item -> modelMapper.map(item, CartItemDTO.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(cartItemDTOs);
+      } catch (Exception e) {
+        return ResponseEntity.badRequest().body("invalid user token");
+      } 
+    }
+    
+
+    @CrossOrigin(origins = "*")
+    @DeleteMapping("/users/cart/items/{cartItemId}")
+    public ResponseEntity<Object> deleteCartItem(@PathVariable Long cartItemId, HttpServletRequest request) {
+      try {
+        String jwt = request.getHeader("Authorization").replace("Bearer ", "");
+        String userEmail = jwtUtil.extractUsername(jwt);
+
+        User user = userService.getUserByEmail(userEmail);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        cartService.deleteCartItem(cartItemId); 
+
+        return ResponseEntity.noContent().build();
+      } catch (Exception e) {
+        return ResponseEntity.badRequest().body("invalid user token");
+      } 
+    }
 }

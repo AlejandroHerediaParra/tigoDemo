@@ -40,9 +40,17 @@ public class CartServiceImpl implements CartService {
         return savedCartItems;
     }
 
-    // You can add more methods here, such as:
-    // - removeCartItem(CartItem cartItem)
-    // - updateCartItemQuantity(CartItem cartItem, int newQuantity)
-    // - getCartById(Long cartId)
-    // - etc.
+    @Override
+    public List<CartItem> getCartItemsByUser(User user) {
+      Cart cart = user.getCart(); 
+        if (cart == null) {
+            return null; 
+        }
+        return cart.getCartItems(); 
+    }
+
+    @Override
+    public void deleteCartItem(Long cartItemId) {
+        cartItemRepository.deleteById(cartItemId); 
+    }
 }

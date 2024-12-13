@@ -35,7 +35,7 @@ public class WebSecurityConfiguration {
               "/users/cart/items"
             ).permitAll()
             .and()
-            .authorizeHttpRequests().requestMatchers("/**/**/**")
+            .authorizeHttpRequests().requestMatchers("/**/**/**/**")
             .authenticated().and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
