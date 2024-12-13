@@ -10,11 +10,15 @@ import com.tigo.ahp.repositories.ProductRepository;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-      @Autowired
-    private ProductRepository productRepository;
+  @Autowired
+  private ProductRepository productRepository;
 
-    @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
+  @Override
+  public List<Product> getAllProducts() {
+      return productRepository.findAll();
+  }
+
+  public List<Product> searchProductsByTitle(String title) {
+    return productRepository.findByTitleContainingIgnoreCase(title); 
+  }
 }
